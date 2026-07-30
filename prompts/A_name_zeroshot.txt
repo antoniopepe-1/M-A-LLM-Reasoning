@@ -1,0 +1,31 @@
+You are a strategic M&A advisor.
+
+Below is the identity and key financial context of a publicly traded US company.
+No business description or strategy text is provided — reason from the company identity, its fiscal year context, and the financial profile.
+
+Based on this identity and the fiscal year, identify the 5 most strategically fitting acquisition targets that this company would have pursued at that time.
+
+For each target:
+- Company name
+- One sentence explaining the strategic rationale
+
+Do not suggest competitors. Focus on strategic complementarity, capability gaps, and market expansion logic.
+
+---
+ACQUIRER PROFILE:
+{acquirer_profile}
+---
+
+Respond in this exact format:
+1. [Company Name] — [Rationale]
+2. [Company Name] — [Rationale]
+3. [Company Name] — [Rationale]
+4. [Company Name] — [Rationale]
+5. [Company Name] — [Rationale]
+
+---
+CRITICAL — after your list above, output the machine-readable answer as the
+VERY LAST line of your response, exactly in this form (a JSON array of the 5
+target company names, best first):
+
+FINAL TARGETS: ["Name 1", "Name 2", "Name 3", "Name 4", "Name 5"]

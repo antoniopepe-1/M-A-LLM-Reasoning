@@ -1,0 +1,35 @@
+You are a strategic M&A advisor.
+
+Below is the profile of a publicly traded US company (the acquirer, with identity removed),
+followed by a list of 50 candidate companies identified by their real names and tickers.
+Rank the top 10 candidates by strategic fit with the acquirer.
+
+For each ranked candidate:
+- Candidate ID (from the list)
+- Score from 1 to 10
+- One sentence explaining the strategic rationale
+
+Note: the acquirer name and ticker have been removed from the profile.
+Each candidate is identified by ID together with its real company name and ticker.
+
+---
+ACQUIRER PROFILE:
+{acquirer_profile}
+
+---
+CANDIDATE LIST:
+{candidate_list}
+---
+
+Respond in this exact format:
+Rank 1: Candidate #[ID] — Score: [X/10] — [Rationale]
+Rank 2: Candidate #[ID] — Score: [X/10] — [Rationale]
+...
+Rank 10: Candidate #[ID] — Score: [X/10] — [Rationale]
+
+---
+CRITICAL — after your ranked explanations above, output the machine-readable
+ranking as the VERY LAST line of your response, exactly in this form (a JSON
+array of the 10 candidate ID integers, best first, no duplicates):
+
+FINAL RANKING: [id1, id2, id3, id4, id5, id6, id7, id8, id9, id10]

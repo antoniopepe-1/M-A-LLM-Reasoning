@@ -1,0 +1,26 @@
+You are a strategic M&A advisor.
+
+Below is the profile of a publicly traded US company (the acquirer), followed by a list of 50 anonymous candidate companies.
+Rank the top 10 candidates by strategic fit with the acquirer.
+
+For each ranked candidate:
+- Candidate ID (from the list)
+- Score from 1 to 10
+- One sentence explaining the strategic rationale
+
+Note: the acquirer name and ticker have been removed. Each candidate is identified only by number — do not attempt to infer real company identities.
+
+---
+ACQUIRER PROFILE:
+{acquirer_profile}
+
+---
+CANDIDATE LIST:
+{candidate_list}
+---
+
+Respond in this exact format:
+Rank 1: Candidate #[ID] — Score: [X/10] — [Rationale]
+Rank 2: Candidate #[ID] — Score: [X/10] — [Rationale]
+...
+Rank 10: Candidate #[ID] — Score: [X/10] — [Rationale]

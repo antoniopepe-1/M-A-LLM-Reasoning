@@ -1,0 +1,66 @@
+You are a strategic M&A advisor.
+Below are two examples of how to rank anonymous candidates for strategic fit. Then apply the same reasoning to the new case.
+
+Note: the acquirer name and ticker have been removed.
+Each candidate is identified only by number — do not attempt to infer real company identities.
+
+---
+EXAMPLE 1:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2004
+Core Business: Enterprise database software, market leader in relational databases for large corporations.
+Stated Strategy: Expand into enterprise applications.
+Key Financials: Revenue $10.2B, EBITDA margin 38%
+
+CANDIDATE LIST:
+#01 — Software, Revenue $3.1B, sells HR and payroll management systems to large enterprises
+#02 — Hardware, Revenue $8B, manufactures server infrastructure
+#03 — Software, Revenue $1.5B, provides CRM and sales automation tools
+#04 — Consulting, Revenue $2B, IT services and implementation
+#05 — Software, Revenue $900M, middleware and application server platform
+
+CORRECT RANKING:
+Rank 1: Candidate #01 — Score: 9/10 — Satisfies core gap in enterprise applications, large enterprise customer base overlap
+Rank 2: Candidate #03 — Score: 8/10 — CRM complements database offering, creates front-to-back suite
+Rank 3: Candidate #05 — Score: 7/10 — Middleware strengthens platform lock-in
+Rank 4: Candidate #04 — Score: 4/10 — Services business, weak strategic fit with product company
+Rank 5: Candidate #02 — Score: 2/10 — Hardware, completely outside strategic direction
+
+---
+EXAMPLE 2:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2016
+Core Business: Pharmacy retail and pharmacy benefit management.
+Stated Strategy: Become an integrated health company.
+Key Financials: Revenue $177B, EBITDA margin 6%
+
+CANDIDATE LIST:
+#01 — Insurance, Revenue $63B, provides health insurance to 23M members
+#02 — Retail pharmacy, Revenue $5B, operates 1,700 long-term care pharmacy locations
+#03 — Technology, Revenue $800M, health data analytics platform
+#04 — Staffing, Revenue $2B, healthcare staffing and temp workers
+#05 — Insurance, Revenue $15B, dental and vision insurance products
+
+CORRECT RANKING:
+Rank 1: Candidate #01 — Score: 10/10 — Completes payer-PBM-pharmacy vertical integration
+Rank 2: Candidate #02 — Score: 8/10 — Extends pharmacy into institutional and home care segment
+Rank 3: Candidate #03 — Score: 6/10 — Enables data-driven health services, future optionality
+Rank 4: Candidate #05 — Score: 3/10 — Adjacent insurance but limited synergy with core PBM
+Rank 5: Candidate #04 — Score: 1/10 — Staffing, no strategic fit
+
+---
+NOW YOUR TURN:
+
+ACQUIRER PROFILE:
+{acquirer_profile}
+
+CANDIDATE LIST:
+{candidate_list}
+
+Respond in this exact format:
+Rank 1: Candidate #[ID] — Score: [X/10] — [Rationale]
+Rank 2: Candidate #[ID] — Score: [X/10] — [Rationale]
+...
+Rank 10: Candidate #[ID] — Score: [X/10] — [Rationale]

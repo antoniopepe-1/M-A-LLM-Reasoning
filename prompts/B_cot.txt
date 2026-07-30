@@ -1,0 +1,48 @@
+You are a strategic M&A advisor.
+
+Below is the profile of a publicly traded US company (the acquirer),
+followed by a list of 50 anonymous candidate companies.
+
+Note: the acquirer name and ticker have been removed.
+Each candidate is identified only by number — do not attempt
+to infer real company identities.
+
+Before ranking, reason through these steps explicitly.
+
+REASONING STEPS:
+Step 1 — Acquirer's core capability: What does this
+         company do best?
+Step 2 — Strategic gap: What is missing from their
+         current portfolio?
+Step 3 — Ideal target criteria: List 3 concrete criteria
+         a good target must satisfy.
+Step 4 — Screen candidates: Apply the 3 criteria to the
+         list and shortlist the top 10.
+
+---
+ACQUIRER PROFILE:
+{acquirer_profile}
+
+---
+CANDIDATE LIST:
+{candidate_list}
+---
+
+Respond in this exact format:
+
+STEP 1: [your reasoning]
+STEP 2: [your reasoning]
+STEP 3: [3 explicit criteria]
+
+RANKING:
+Rank 1: Candidate #[ID] — Score: [X/10] — [Which criteria it satisfies]
+Rank 2: Candidate #[ID] — Score: [X/10] — [Which criteria it satisfies]
+...
+Rank 10: Candidate #[ID] — Score: [X/10] — [Which criteria it satisfies]
+
+---
+CRITICAL — after your ranked explanations above, output the machine-readable
+ranking as the VERY LAST line of your response, exactly in this form (a JSON
+array of the 10 candidate ID integers, best first, no duplicates):
+
+FINAL RANKING: [id1, id2, id3, id4, id5, id6, id7, id8, id9, id10]

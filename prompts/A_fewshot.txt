@@ -1,0 +1,65 @@
+You are a strategic M&A advisor.
+Below are three examples of how to identify acquisition targets from a company profile. Then apply the same reasoning to the new case.
+
+Note: the acquirer profile below has the company name and ticker removed. Reason only from the business description, strategy, and financials.
+
+---
+EXAMPLE 1:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2004
+Core Business: Enterprise database software and middleware. Market leader in relational databases for large corporations.
+Stated Strategy: Expand into enterprise applications to compete with SAP end-to-end. 
+Key Financials: Revenue $10.2B, EBITDA margin 38%, Market cap $58B
+
+CORRECT TARGETS:
+1. PeopleSoft — HR and ERP software, fills the application gap the acquirer lacks
+2. Siebel Systems — CRM leader, complements database with front-office applications
+3. BEA Systems — Middleware and application servers, strengthens platform integration
+4. Hyperion Solutions — Financial planning software, expands into the CFO suite
+5. Retek — Retail ERP, adds vertical specialization
+
+---
+EXAMPLE 2:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2005
+Core Business: Search engine and online advertising. Dominant in web search with 60%+ market share.
+Stated Strategy: Expand beyond search into adjacent digital services and mobile.
+Key Financials: Revenue $6.1B, EBITDA margin 41%, Market cap $120B
+
+CORRECT TARGETS:
+1. YouTube — Video platform, expands into video advertising
+2. DoubleClick — Ad serving technology, strengthens the advertising stack
+3. Android — Mobile OS, secures position in the mobile shift
+4. Keyhole — Mapping technology, enables mapping and satellite products
+5. Applied Semantics — Contextual advertising, improves ad relevance
+
+---
+EXAMPLE 3:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2016
+Core Business: Pharmacy retail chain and pharmacy benefit management (PBM).
+Stated Strategy: Transform from retailer to integrated health company, capturing more of the healthcare value chain.
+Key Financials: Revenue $177B, EBITDA margin 6%, Market cap $74B
+
+CORRECT TARGETS:
+1. Aetna — Health insurer, completes the payer-PBM-pharmacy integration
+2. Omnicare — Long-term care pharmacy, expands into institutional segment
+3. Coram — Infusion services, adds home health capability
+4. BioScrip — Specialty pharmacy, addresses complex chronic condition management
+5. MinuteClinic expansion targets — Clinic operators to scale primary care
+
+---
+NOW YOUR TURN:
+
+ACQUIRER PROFILE:
+{acquirer_profile}
+
+Respond in this exact format:
+1. [Company Name] — [Rationale]
+2. [Company Name] — [Rationale]
+3. [Company Name] — [Rationale]
+4. [Company Name] — [Rationale]
+5. [Company Name] — [Rationale]
