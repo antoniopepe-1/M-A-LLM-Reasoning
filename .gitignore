@@ -1,32 +1,5 @@
-# --- Secrets ---
-.env
-
-# --- Python ---
 venv/
-.venv/
 __pycache__/
 *.pyc
-*.pyo
+.env
 .ipynb_checkpoints/
-
-# --- OS / editor ---
-.DS_Store
-.vscode/
-.idea/
-
-# --- Data (NOT redistributable / regenerable) ---
-# Capital IQ / S&P Global exports and any derived datasets are licensed
-# and must never be committed. See README ("Data availability").
-data/raw/
-data/**/*.csv
-data/**/*.json
-data/**/*.parquet
-data/**/*.xlsx
-data/**/10k_raw/
-data/**/10k_raw_refetch/
-
-# --- Large / regenerable artifacts ---
-results/**/_embedding_cache/
-results/**/*.npy
-results/**/responses_raw.jsonl
-logs/
