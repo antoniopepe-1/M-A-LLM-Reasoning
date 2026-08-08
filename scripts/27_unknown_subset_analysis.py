@@ -1,33 +1,28 @@
 """
 27_unknown_subset_analysis.py
 ==============================
-Analyzes Condition B/C performance on the subset of deals a model did not
-recall, isolating reasoning from memory.
+Analisi delle performance B/C sul sottoinsieme dei deal "non conosciuti" dai modelli.
 
-RATIONALE
+RAZIONALE
 ---------
-When a model ranks the true target first in Condition B, that alone does not
-reveal whether it reasoned about strategic fit or retrieved a memorized deal.
-The recall test (Script 19) identifies the deals for which a model answered
-UNKNOWN or FAILURE; on those, memory is excluded as an explanation.
-Comparing full-sample MRR against unknown-subset MRR indicates how much
-performance is attributable to recall rather than reasoning.
+Se un modello in Condizione B piazza la target al rank 1, non si può sapere se ha ragionato sul fit strategico o ha recuperato dalla memoria il deal.
+Il recall test (Script 19) identifica i deal non recuperati esattamente dal
+modello. Il subset U_m include quindi PARTIAL, FAILURE e UNKNOWN; soltanto
+SUCCESS è considerato recall validato. Il confronto con il full sample è una
+robustezza descrittiva, non una stima causale della quota di memoria.
 
-Note: the subset is MODEL-SPECIFIC (U_m, the deals that particular model failed
-to recall), and a non-recalled deal is only evidence that the direct probe did
-not elicit it — not proof the deal is absent from the model's weights.
-
-DATA SOURCES
-------------
-  results/evaluation/metrics_raw_BC.csv   <- Script 17 (per-deal metrics)
-  results/memorization/recall_raw_*.jsonl <- Script 19 (recall test)
+SORGENTE DATI
+-------------
+  results/evaluation/metrics_raw_BC.csv   ← output Script 17 (metriche per-deal)
+  results/memorization/recall_raw_*.jsonl ← output Script 19 (recall test)
 
 OUTPUT
 ------
   results/memorization/
-    unknown_subset_analysis.csv
-    unknown_subset_deltas.csv
-    unknown_subset_report.txt
+    unknown_subset_analysis.csv     
+    unknown_subset_deltas.csv       
+    unknown_subset_report.txt       
+
 """
 
 import json
@@ -38,6 +33,7 @@ from pathlib import Path
 from collections import defaultdict
 
 import pandas as pd
+import numpy as np
 
 # ── Logging ────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -48,15 +44,15 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 # ── Paths ──────────────────────────────────────────────────────────────────
-# Derived from the script location: <project>/scripts/27_*.py -> <project>
+# Derivato dalla posizione dello script: <ma_analyst>/scripts/27_*.py → ma_analyst
 BASE_DIR    = Path(__file__).resolve().parent.parent
 RESULTS_DIR = BASE_DIR / "results"
 MEMO_DIR    = RESULTS_DIR / "memorization"
 EVAL_DIR    = RESULTS_DIR / "evaluation"
 
 # ── Mapping model_key (CSV) → model_slug (recall JSONL) ───────────────────
-# model_key is the value in the model_key column of metrics_raw_BC.csv
-# model_slug is the value used in recall_raw_{slug}.jsonl
+# model_key è il valore nella colonna model_key di metrics_raw_BC.csv
+# model_slug è il valore in recall_raw_{slug}.jsonl
 MODEL_KEY_TO_SLUG = {
     "deepseek":    "deepseek_v3",
     "qwen3":       "qwen3_235b",
@@ -67,6 +63,9 @@ MODEL_KEY_TO_SLUG = {
 }
 
 BIG_MODELS_SLUG = ["llama33_70b", "qwen3_235b", "deepseek_v3"]
+ALL_MODELS_SLUG = list(MODEL_KEY_TO_SLUG.values())
+N_BOOTSTRAP = 1000
+BOOTSTRAP_SEED = 42
 
 
 # ── Caricamento recall ─────────────────────────────────────────────────────
@@ -95,11 +94,14 @@ def build_unknown_subsets(recall: dict) -> tuple[set, set]:
     """
     unknown_big, unknown_all = set(), set()
     for deal_id, labels in recall.items():
-        not_known = lambda slug: labels.get(slug, "UNKNOWN") in ("FAILURE", "UNKNOWN")
+        # Only an exact, validated SUCCESS counts as direct recall. PARTIAL is
+        # deliberately retained in the non-recalled set because it did not pass
+        # conservative entity resolution.
+        not_known = lambda slug: labels.get(slug, "UNKNOWN") != "SUCCESS"
 
-        if all(not_known(m) for m in BIG_MODELS_SLUG if m in labels):
+        if all(not_known(m) for m in BIG_MODELS_SLUG):
             unknown_big.add(deal_id)
-        if all(v in ("FAILURE", "UNKNOWN") for v in labels.values()):
+        if all(not_known(m) for m in ALL_MODELS_SLUG):
             unknown_all.add(deal_id)
 
     log.info(f"Unknown subset — big models: {len(unknown_big)} | all models: {len(unknown_all)}")
@@ -116,20 +118,19 @@ def build_model_specific_subsets(recall: dict) -> dict[str, set]:
     per_model: dict[str, set] = defaultdict(set)
     for deal_id, labels in recall.items():
         for slug, label in labels.items():
-            if label in ("FAILURE", "UNKNOWN"):
+            if label != "SUCCESS":
                 per_model[slug].add(deal_id)
     for slug, s in per_model.items():
         log.info(f"U_m — {slug}: {len(s)} non-recalled deals")
     return per_model
 
 
-# ── Aggregate metrics over a subset ───────────────────────────────────────────
+# ── Metriche aggregate su subset ───────────────────────────────────────────
 
 def aggregate_metrics(df_sub: pd.DataFrame) -> dict:
     """
-    Aggregate the per-deal metrics already computed by Script 17.
-    target_rank is NaN when the target is outside the top-10, which contributes
-    MRR = 0 for that deal.
+    Aggrega le metriche per-deal già calcolate da Script 17.
+    target_rank è NaN quando la target non è nel top-10 → MRR=0 per quel deal.
     """
     n = len(df_sub)
     if n == 0:
@@ -149,10 +150,57 @@ def aggregate_metrics(df_sub: pd.DataFrame) -> dict:
     }
 
 
+def clustered_subset_delta_ci(
+    df_cell: pd.DataFrame,
+    subset_deals: set,
+    n_resamples: int = N_BOOTSTRAP,
+    seed: int = BOOTSTRAP_SEED,
+) -> tuple[float, float]:
+    """95% cluster-bootstrap CI for MRR(subset) - MRR(full).
+
+    Acquirers are resampled with replacement. Within each sampled acquirer,
+    every deal is retained, preserving repeated-acquirer dependence and the
+    overlap between the subset and the full-sample estimator.
+    """
+    if df_cell.empty or not subset_deals:
+        return (0.0, 0.0)
+
+    cluster_col = "acquirer_ticker"
+    if cluster_col not in df_cell.columns:
+        raise KeyError(f"Missing bootstrap cluster column: {cluster_col}")
+
+    grouped = list(df_cell.groupby(cluster_col, sort=True))
+    full_sums = np.array([group["mrr"].sum() for _, group in grouped])
+    full_counts = np.array([len(group) for _, group in grouped])
+    subset_sums = np.array([
+        group.loc[group["deal_id"].isin(subset_deals), "mrr"].sum()
+        for _, group in grouped
+    ])
+    subset_counts = np.array([
+        group["deal_id"].isin(subset_deals).sum()
+        for _, group in grouped
+    ])
+
+    n_clusters = len(grouped)
+    rng = np.random.default_rng(seed)
+    picks = rng.integers(0, n_clusters, size=(n_resamples, n_clusters))
+    full_means = full_sums[picks].sum(axis=1) / full_counts[picks].sum(axis=1)
+    selected_subset_counts = subset_counts[picks].sum(axis=1)
+    if np.any(selected_subset_counts == 0):
+        raise ValueError("A bootstrap resample contained no subset observations")
+    subset_means = (
+        subset_sums[picks].sum(axis=1) / selected_subset_counts
+    )
+    boot = subset_means - full_means
+
+    lo, hi = np.quantile(boot, [0.025, 0.975])
+    return (round(float(lo), 4), round(float(hi), 4))
+
+
 # ── Analisi principale ─────────────────────────────────────────────────────
 
 def run_analysis(eval_dir: Path, memo_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
-    # Load the per-deal metrics produced by Script 17
+    # Carica metriche per-deal da Script 17
     metrics_path = eval_dir / "metrics_raw_BC.csv"
     if not metrics_path.exists():
         log.error(f"File non trovato: {metrics_path}")
@@ -164,7 +212,7 @@ def run_analysis(eval_dir: Path, memo_dir: Path) -> tuple[pd.DataFrame, pd.DataF
     log.info(f"  condition unici: {sorted(df['condition'].unique())}")
     log.info(f"  strategy unici:  {sorted(df['strategy'].unique())}")
 
-    # Add model_slug so the recall results can be joined
+    # Aggiungi colonna model_slug per il join con recall
     df["model_slug"] = df["model_key"].map(MODEL_KEY_TO_SLUG)
     unmapped = df[df["model_slug"].isna()]["model_key"].unique()
     if len(unmapped) > 0:
@@ -204,6 +252,16 @@ def run_analysis(eval_dir: Path, memo_dir: Path) -> tuple[pd.DataFrame, pd.DataF
                 m_u_self  = aggregate_metrics(df_u_self)
                 m_unk_big = aggregate_metrics(df_unk_big)
                 m_unk_all = aggregate_metrics(df_unk_all)
+                u_ci_lo, u_ci_hi = clustered_subset_delta_ci(df_cell, u_self)
+                common_ci_lo, common_ci_hi = clustered_subset_delta_ci(
+                    df_cell, unknown_big
+                )
+                delta_u_exact = round(
+                    df_u_self["mrr"].mean() - df_cell["mrr"].mean(), 4
+                )
+                delta_common_exact = round(
+                    df_unk_big["mrr"].mean() - df_cell["mrr"].mean(), 4
+                )
 
                 def make_row(subset, metrics):
                     return {"condition": condition, "model_key": model_key,
@@ -223,11 +281,15 @@ def run_analysis(eval_dir: Path, memo_dir: Path) -> tuple[pd.DataFrame, pd.DataF
                     "n_full":           m_full["n_deals"],
                     "n_U_m_self":       m_u_self["n_deals"],
                     "mrr_U_m_self":     m_u_self["mrr"],
-                    "delta_mrr_U_m":    round(m_u_self["mrr"] - m_full["mrr"], 4),
+                    "delta_mrr_U_m":    delta_u_exact,
+                    "delta_mrr_U_m_ci_lo": u_ci_lo,
+                    "delta_mrr_U_m_ci_hi": u_ci_hi,
                     "n_unknown_big":    m_unk_big["n_deals"],
                     "mrr_full":         m_full["mrr"],
                     "mrr_unknown_big":  m_unk_big["mrr"],
-                    "delta_mrr":        round(m_unk_big["mrr"] - m_full["mrr"], 4),
+                    "delta_mrr":        delta_common_exact,
+                    "delta_mrr_ci_lo":  common_ci_lo,
+                    "delta_mrr_ci_hi":  common_ci_hi,
                     "recall5_full":     m_full["recall@5"],
                     "recall5_unknown":  m_unk_big["recall@5"],
                     "delta_recall5":    round(m_unk_big["recall@5"] - m_full["recall@5"], 4),
