@@ -1,54 +1,112 @@
 You are a strategic M&A advisor.
-Below are two examples of how to rank anonymous candidates for strategic fit. Then apply the same reasoning to the new case.
 
-Note: the acquirer name and ticker have been removed.
-Each candidate is identified only by number — do not attempt to infer real company identities.
+Below are three worked examples. For temporal isolation, the demonstrations were selected exclusively from acquisitions announced or completed by 31 December 2009, before the 2015-2022 evaluation window. Each demonstration uses anonymous candidates with text and structured metadata.
+
+IMPORTANT: the 31 December 2009 cutoff applies only to selection of the worked examples. It is not a filter for the new case or its candidate list. Rank the supplied candidates for the fiscal-year context stated in the new acquirer profile.
+
+The acquirer name and ticker are removed. Each candidate is identified only by number; do not attempt to infer real company identities.
 
 ---
 EXAMPLE 1:
 
 ACQUIRER PROFILE:
-Company: [Redacted], FY2004
-Core Business: Enterprise database software, market leader in relational databases for large corporations.
-Stated Strategy: Expand into enterprise applications.
-Key Financials: Revenue $10.2B, EBITDA margin 38%
+Company: [Redacted], FY1996
+Core Business: Global branded consumer products spanning household care, personal care, beauty, and family care.
+Stated Strategy: Expand into faster-growing, higher-margin consumer categories by applying brand building, innovation, and global distribution.
+Key Financials: Revenue above $10B; profitable large-cap consumer-products company.
 
 CANDIDATE LIST:
-#01 — Software, Revenue $3.1B, sells HR and payroll management systems to large enterprises
-#02 — Hardware, Revenue $8B, manufactures server infrastructure
-#03 — Software, Revenue $1.5B, provides CRM and sales automation tools
-#04 — Consulting, Revenue $2B, IT services and implementation
-#05 — Software, Revenue $900M, middleware and application server platform
+Candidate #01 | Industry: Consumer | Market Cap: $2-10B | Revenue: $2-10B | Description: Professional and retail hair-care, colorant, cosmetics, and fragrance brands sold internationally.
+Candidate #02 | Industry: Consumer | Market Cap: $2-10B | Revenue: $2-10B | Description: Category-leading razors, grooming products, oral-care brands, batteries, and small appliances with global distribution.
+Candidate #03 | Industry: Industrials | Market Cap: >$10B | Revenue: >$10B | Description: Heavy-equipment manufacturer serving construction and mining customers.
+Candidate #04 | Industry: Consumer | Market Cap: $500M-2B | Revenue: $500M-2B | Description: Premium dog and cat nutrition brands sold through specialty and mass retail channels.
+Candidate #05 | Industry: Consumer | Market Cap: $100-500M | Revenue: $100-500M | Description: Branded feminine-care products with strong retail recognition.
+Candidate #06 | Industry: Technology | Market Cap: $500M-2B | Revenue: $100-500M | Description: Enterprise network-security software for large corporations.
+Candidate #07 | Industry: Consumer | Market Cap: $2-10B | Revenue: $2-10B | Description: Hair-color and beauty brands with broad supermarket and pharmacy distribution.
+Candidate #08 | Industry: Finance | Market Cap: >$10B | Revenue: >$10B | Description: Diversified commercial and retail banking group.
+Candidate #09 | Industry: Healthcare | Market Cap: $500M-2B | Revenue: $100-500M | Description: Clinical-stage biotechnology company without marketed consumer products.
+Candidate #10 | Industry: Consumer | Market Cap: $2-10B | Revenue: $2-10B | Description: Regional packaged-food producer focused on private-label staples.
 
 CORRECT RANKING:
-Rank 1: Candidate #01 — Score: 9/10 — Satisfies core gap in enterprise applications, large enterprise customer base overlap
-Rank 2: Candidate #03 — Score: 8/10 — CRM complements database offering, creates front-to-back suite
-Rank 3: Candidate #05 — Score: 7/10 — Middleware strengthens platform lock-in
-Rank 4: Candidate #04 — Score: 4/10 — Services business, weak strategic fit with product company
-Rank 5: Candidate #02 — Score: 2/10 — Hardware, completely outside strategic direction
+Rank 1: Candidate #02 — Score: 10/10 — Adds global category-leading brands and highly complementary consumer distribution
+Rank 2: Candidate #01 — Score: 9/10 — Expands beauty into professional channels, fragrances, and international hair care
+Rank 3: Candidate #07 — Score: 8/10 — Strengthens branded retail beauty and hair color in existing channels
+Rank 4: Candidate #04 — Score: 8/10 — Opens a premium adjacent consumer category that can use the acquirer's branding capabilities
+Rank 5: Candidate #05 — Score: 7/10 — Complements the personal and family-care portfolio with a recognized brand
+Rank 6: Candidate #10 — Score: 4/10 — Uses consumer distribution but offers weaker category and margin fit
+Rank 7: Candidate #06 — Score: 3/10 — Valuable technology but little product or channel complementarity
+Rank 8: Candidate #09 — Score: 2/10 — Healthcare adjacency is offset by high development risk and no consumer brand
+Rank 9: Candidate #03 — Score: 1/10 — Capital-intensive industrial operations are outside the strategic portfolio
+Rank 10: Candidate #08 — Score: 1/10 — Regulated banking has no operating fit with branded consumer products
+FINAL RANKING: [2, 1, 7, 4, 5, 10, 6, 9, 3, 8]
 
 ---
 EXAMPLE 2:
 
 ACQUIRER PROFILE:
-Company: [Redacted], FY2016
-Core Business: Pharmacy retail and pharmacy benefit management.
-Stated Strategy: Become an integrated health company.
-Key Financials: Revenue $177B, EBITDA margin 6%
+Company: [Redacted], FY2001
+Core Business: Global online marketplace connecting individual and small-business buyers and sellers.
+Stated Strategy: Reduce transaction friction and extend into payments, communications, classifieds, and specialized commerce verticals.
+Key Financials: Revenue between $500M and $2B; profitable high-growth technology platform; market capitalization above $10B.
 
 CANDIDATE LIST:
-#01 — Insurance, Revenue $63B, provides health insurance to 23M members
-#02 — Retail pharmacy, Revenue $5B, operates 1,700 long-term care pharmacy locations
-#03 — Technology, Revenue $800M, health data analytics platform
-#04 — Staffing, Revenue $2B, healthcare staffing and temp workers
-#05 — Insurance, Revenue $15B, dental and vision insurance products
+Candidate #01 | Industry: Finance | Market Cap: $500M-2B | Revenue: $100-500M | Description: Online point-of-sale credit and deferred-payment service integrated into merchant checkout.
+Candidate #02 | Industry: Industrials | Market Cap: >$10B | Revenue: >$10B | Description: Global freight railroad and bulk-logistics operator.
+Candidate #03 | Industry: Technology | Market Cap: $100-500M | Revenue: $100-500M | Description: Online comparison-shopping engine connecting merchants with purchase-ready consumers.
+Candidate #04 | Industry: Telecom | Market Cap: $500M-2B | Revenue: $100-500M | Description: Internet voice and video communications platform with a global user base.
+Candidate #05 | Industry: Consumer | Market Cap: $2-10B | Revenue: $2-10B | Description: Brick-and-mortar department-store chain with inventory-heavy operations.
+Candidate #06 | Industry: Finance | Market Cap: $100-500M | Revenue: $100-500M | Description: Digital wallet enabling secure person-to-person and merchant payments online.
+Candidate #07 | Industry: Media | Market Cap: <$100M | Revenue: <$100M | Description: Advertising-supported local news publisher.
+Candidate #08 | Industry: Services | Market Cap: $500M-2B | Revenue: $100-500M | Description: Online local-classifieds platform organized by city and product category.
+Candidate #09 | Industry: Services | Market Cap: $100-500M | Revenue: $100-500M | Description: Two-sided online marketplace for event tickets.
+Candidate #10 | Industry: Technology | Market Cap: $2-10B | Revenue: $500M-2B | Description: Enterprise database vendor selling long-term licenses to large corporations.
 
 CORRECT RANKING:
-Rank 1: Candidate #01 — Score: 10/10 — Completes payer-PBM-pharmacy vertical integration
-Rank 2: Candidate #02 — Score: 8/10 — Extends pharmacy into institutional and home care segment
-Rank 3: Candidate #03 — Score: 6/10 — Enables data-driven health services, future optionality
-Rank 4: Candidate #05 — Score: 3/10 — Adjacent insurance but limited synergy with core PBM
-Rank 5: Candidate #04 — Score: 1/10 — Staffing, no strategic fit
+Rank 1: Candidate #06 — Score: 10/10 — Removes payment friction and improves trust inside marketplace transactions
+Rank 2: Candidate #03 — Score: 9/10 — Adds shopping discovery and merchant traffic closely tied to online commerce
+Rank 3: Candidate #08 — Score: 8/10 — Extends the two-sided marketplace model into local classifieds
+Rank 4: Candidate #09 — Score: 8/10 — Adds a specialized marketplace with familiar platform economics
+Rank 5: Candidate #01 — Score: 7/10 — Adds checkout financing that can increase transaction conversion and value
+Rank 6: Candidate #04 — Score: 6/10 — Supports cross-border buyer-seller communication but has less direct transaction synergy
+Rank 7: Candidate #07 — Score: 4/10 — Offers local audiences but weak marketplace functionality
+Rank 8: Candidate #10 — Score: 3/10 — Strong technology business with limited consumer-commerce complementarity
+Rank 9: Candidate #05 — Score: 2/10 — Physical retail creates inventory and store-operation exposure
+Rank 10: Candidate #02 — Score: 1/10 — Asset-heavy logistics is infeasible and outside the platform model
+FINAL RANKING: [6, 3, 8, 9, 1, 4, 7, 10, 5, 2]
+
+---
+EXAMPLE 3:
+
+ACQUIRER PROFILE:
+Company: [Redacted], FY2005
+Core Business: Diversified family entertainment across filmed content, television networks, theme parks, and consumer products.
+Stated Strategy: Create branded intellectual property, apply new technology to distribution, and extend franchises across media and consumer platforms.
+Key Financials: Revenue approximately $32B; profitable large-cap media company; market capitalization approximately $50B.
+
+CANDIDATE LIST:
+Candidate #01 | Industry: Consumer | Market Cap: >$10B | Revenue: >$10B | Description: Global apparel manufacturer focused on unbranded contract production.
+Candidate #02 | Industry: Technology | Market Cap: $100-500M | Revenue: <$100M | Description: Subscription virtual world designed for children and families.
+Candidate #03 | Industry: Finance | Market Cap: $2-10B | Revenue: $2-10B | Description: Regional property-and-casualty insurance carrier.
+Candidate #04 | Industry: Media | Market Cap: $2-10B | Revenue: $500M-2B | Description: Computer-animation studio with proprietary production technology and globally successful characters.
+Candidate #05 | Industry: Media | Market Cap: $2-10B | Revenue: $100-500M | Description: European subscription television network focused on North American sports.
+Candidate #06 | Industry: Industrials | Market Cap: $500M-2B | Revenue: $500M-2B | Description: Manufacturer of commercial heating and ventilation equipment.
+Candidate #07 | Industry: Healthcare | Market Cap: $500M-2B | Revenue: <$100M | Description: Pre-revenue biotechnology developer focused on rare diseases.
+Candidate #08 | Industry: Media | Market Cap: $500M-2B | Revenue: $100-500M | Description: Owner of a global library of comic-book characters and related licensing rights.
+Candidate #09 | Industry: Real Estate | Market Cap: $2-10B | Revenue: $500M-2B | Description: Office-property trust concentrated in central business districts.
+Candidate #10 | Industry: Technology | Market Cap: <$100M | Revenue: <$100M | Description: Independent studio developing original family-oriented console and online games.
+
+CORRECT RANKING:
+Rank 1: Candidate #04 — Score: 10/10 — Adds premium animation, technology, and characters reusable across the portfolio
+Rank 2: Candidate #08 — Score: 9/10 — Adds durable global intellectual property for film, television, parks, and licensing
+Rank 3: Candidate #02 — Score: 8/10 — Builds direct digital engagement with children and families
+Rank 4: Candidate #10 — Score: 7/10 — Adds interactive storytelling and internal game-development capabilities
+Rank 5: Candidate #05 — Score: 6/10 — Expands subscription sports content and European distribution
+Rank 6: Candidate #01 — Score: 4/10 — Consumer-product adjacency exists but manufacturing adds limited proprietary content
+Rank 7: Candidate #09 — Score: 3/10 — Real assets could diversify earnings but do not strengthen entertainment franchises
+Rank 8: Candidate #06 — Score: 2/10 — Industrial manufacturing lacks content and audience synergies
+Rank 9: Candidate #03 — Score: 1/10 — Insurance is outside the entertainment operating model
+Rank 10: Candidate #07 — Score: 1/10 — Biotechnology offers no relevant content, distribution, or brand fit
+FINAL RANKING: [4, 8, 2, 10, 5, 1, 9, 6, 3, 7]
 
 ---
 NOW YOUR TURN:
@@ -64,3 +122,10 @@ Rank 1: Candidate #[ID] — Score: [X/10] — [Rationale]
 Rank 2: Candidate #[ID] — Score: [X/10] — [Rationale]
 ...
 Rank 10: Candidate #[ID] — Score: [X/10] — [Rationale]
+
+OUTPUT CONSTRAINT: Do not replace the requested rank lines with a JSON object, JSON code block, table, or alternative schema. Print all ten rank lines exactly as shown, followed by the FINAL RANKING line below.
+
+---
+CRITICAL — after your ranked explanations above, output the machine-readable ranking as the VERY LAST line of your response, exactly in this form (a JSON array of the 10 candidate ID integers, best first, no duplicates):
+
+FINAL RANKING: [id1, id2, id3, id4, id5, id6, id7, id8, id9, id10]
