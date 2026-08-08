@@ -1,55 +1,58 @@
 You are a strategic M&A advisor.
-Below are three examples of how to identify acquisition targets from a company profile. Then apply the same reasoning to the new case.
 
-Note: the acquirer profile below has the company name and ticker removed. Reason only from the business description, strategy, and financials.
+Below are three worked examples. For temporal isolation, the demonstrations were selected exclusively from acquisitions announced or completed by 31 December 2009, before the 2015-2022 evaluation window, and each demonstration profile predates its listed transactions.
+
+IMPORTANT: the 31 December 2009 cutoff applies only to selection of the worked examples. It is not a cutoff for the new case. For the new case, recommend targets that were strategically appropriate in the fiscal-year context stated in its profile; do not exclude a candidate merely because it existed or was acquired after 2009.
+
+The acquirer name and ticker are removed. Reason only from the business description, strategy, scale, and financial profile.
 
 ---
 EXAMPLE 1:
 
 ACQUIRER PROFILE:
-Company: [Redacted], FY2004
-Core Business: Enterprise database software and middleware. Market leader in relational databases for large corporations.
-Stated Strategy: Expand into enterprise applications to compete with SAP end-to-end. 
-Key Financials: Revenue $10.2B, EBITDA margin 38%, Market cap $58B
+Company: [Redacted], FY1996
+Core Business: Global branded consumer products spanning household care, personal care, beauty, and family care.
+Stated Strategy: Use consumer insight, brand building, innovation, and global distribution to expand into faster-growing, higher-margin consumer categories.
+Key Financials: Revenue above $10B; profitable large-cap consumer-products company.
 
 CORRECT TARGETS:
-1. PeopleSoft — HR and ERP software, fills the application gap the acquirer lacks
-2. Siebel Systems — CRM leader, complements database with front-office applications
-3. BEA Systems — Middleware and application servers, strengthens platform integration
-4. Hyperion Solutions — Financial planning software, expands into the CFO suite
-5. Retek — Retail ERP, adds vertical specialization
+1. The Iams Company — Adds premium pet nutrition, a branded consumer category suited to the acquirer's marketing and distribution capabilities
+2. Clairol — Expands beauty and hair care with established consumer brands and complementary retail channels
+3. Wella — Adds professional hair care, colorants, cosmetics, and fragrances with international scale
+4. The Gillette Company — Adds category-leading grooming, oral-care, battery, and appliance brands with global distribution synergies
+5. Tambrands — Adds a leading feminine-care brand adjacent to the acquirer's personal and family-care portfolio
 
 ---
 EXAMPLE 2:
 
 ACQUIRER PROFILE:
-Company: [Redacted], FY2005
-Core Business: Search engine and online advertising. Dominant in web search with 60%+ market share.
-Stated Strategy: Expand beyond search into adjacent digital services and mobile.
-Key Financials: Revenue $6.1B, EBITDA margin 41%, Market cap $120B
+Company: [Redacted], FY2001
+Core Business: Global online marketplace connecting individual and small-business buyers and sellers.
+Stated Strategy: Reduce transaction friction and extend the marketplace into payments, communications, classifieds, and specialized commerce verticals.
+Key Financials: Revenue between $500M and $2B; profitable high-growth technology platform; market capitalization above $10B.
 
 CORRECT TARGETS:
-1. YouTube — Video platform, expands into video advertising
-2. DoubleClick — Ad serving technology, strengthens the advertising stack
-3. Android — Mobile OS, secures position in the mobile shift
-4. Keyhole — Mapping technology, enables mapping and satellite products
-5. Applied Semantics — Contextual advertising, improves ad relevance
+1. PayPal — Integrates trusted online payments directly into marketplace transactions
+2. Gumtree — Extends the marketplace model into local online classifieds
+3. Skype — Adds internet communications that can connect buyers and sellers across borders
+4. StubHub — Adds a specialized ticket marketplace with the same two-sided platform economics
+5. Bill Me Later — Adds transactional credit and flexible financing at online checkout
 
 ---
 EXAMPLE 3:
 
 ACQUIRER PROFILE:
-Company: [Redacted], FY2016
-Core Business: Pharmacy retail chain and pharmacy benefit management (PBM).
-Stated Strategy: Transform from retailer to integrated health company, capturing more of the healthcare value chain.
-Key Financials: Revenue $177B, EBITDA margin 6%, Market cap $74B
+Company: [Redacted], FY2005
+Core Business: Diversified family entertainment across filmed content, television networks, theme parks, and consumer products.
+Stated Strategy: Create high-quality branded intellectual property, apply new technology to distribution, and extend franchises across media and consumer platforms.
+Key Financials: Revenue approximately $32B; profitable large-cap media company; market capitalization approximately $50B.
 
 CORRECT TARGETS:
-1. Aetna — Health insurer, completes the payer-PBM-pharmacy integration
-2. Omnicare — Long-term care pharmacy, expands into institutional segment
-3. Coram — Infusion services, adds home health capability
-4. BioScrip — Specialty pharmacy, addresses complex chronic condition management
-5. MinuteClinic expansion targets — Clinic operators to scale primary care
+1. Pixar — Adds leading computer-animation talent, technology, and globally scalable characters
+2. Club Penguin Entertainment — Builds a direct online family audience through a child-focused virtual world
+3. NASN Limited — Expands sports television distribution and subscription content in Europe
+4. Wideload Games — Adds original interactive-entertainment development capabilities
+5. Marvel Entertainment — Adds a deep library of globally recognized characters that can extend across film, television, parks, and consumer products
 
 ---
 NOW YOUR TURN:
@@ -63,3 +66,8 @@ Respond in this exact format:
 3. [Company Name] — [Rationale]
 4. [Company Name] — [Rationale]
 5. [Company Name] — [Rationale]
+
+---
+CRITICAL — after your list above, output the machine-readable answer as the VERY LAST line of your response, exactly in this form (a JSON array of the 5 target company names, best first):
+
+FINAL TARGETS: ["Name 1", "Name 2", "Name 3", "Name 4", "Name 5"]
