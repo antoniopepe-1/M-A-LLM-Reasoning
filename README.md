@@ -1,8 +1,6 @@
-# LLM-as-M&A-Analyst — Replication Package
+# LLM-as-M&A-Analyst — Code and Prompts
 
-This repository contains the code and prompt templates used to study whether
-large language models identify acquisition targets through strategic reasoning
-or through memorized knowledge of past M&A transactions.
+This repository provides the complete code and prompt templates used in the paper. Licensed input data and generated experimental outputs are not redistributed. DATA_ACQUISITION.md documents the filters, required fields, expected sample counts, and reconstruction procedure.
 
 The experiment compares six models under three conditions:
 
