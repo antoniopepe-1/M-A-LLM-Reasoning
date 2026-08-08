@@ -28,25 +28,25 @@ ANONYMIZATION
 Acquirer identity is fully masked before prompt construction to prevent models from retrieving memorized deal outcomes rather than reasoning about strategic fit.
 Masking covers: ticker symbols, full legal names, HTML-encoded variants, exchange prefixes, and all significant name tokens appearing in the 10-K text.
 
-MODEL ROSTER - v4 final (OpenRouter cloud only)
------------------------------------------------
-  Scaling curve, by increasing active parameters:
+MODEL ROSTER — v4 final (OpenRouter cloud only, 6 modelli)
+----------------------------------------------------------
+  Curva di scala (params attivi crescenti):
 
-    llama32_1b   : Llama 3.2 1B    (1B dense)               - extreme lower bound (Meta)
-    qwen3_8b     : Qwen3-8B        (8B dense)               - small Qwen
-    phi4         : Phi-4           (14B dense)              - large Phi
-    llama33_70b  : Llama 3.3 70B   (70B dense)              - cross-family dense (Meta)
-    qwen3        : Qwen3-235B      (235B MoE, 22B active)   - large Qwen
-    deepseek     : DeepSeek V3     (685B MoE, 37B active)   - top anchor
+    llama32_1b   : Llama 3.2 1B    (1B dense)              — lower bound estremo (Meta)
+    qwen3_8b     : Qwen3-8B        (8B dense)               — small Qwen 
+    phi4         : Phi-4           (14B dense)               — large Phi 
+    llama33_70b  : Llama 3.3 70B   (70B dense)              — cross-family dense (Meta)
+    qwen3        : Qwen3-235B      (235B MoE, 22B active)    — large Qwen 
+    deepseek     : DeepSeek V3     (685B MoE, 37B active)    — top anchor 
 
-  Comparisons this roster supports:
-    RQ3 scaling:      1B -> 8B -> 14B -> 70B -> 22B(MoE) -> 37B(MoE)
-    Intra-family Phi: phi4 (14B) is the sole Microsoft entry (no 3.8B slot available)
-    Intra-family Qwen: qwen3_8b (8B) vs qwen3 (22B active) - scale + architecture
+  Narrative supportate:
+    RQ3 scala:        1B → 8B → 14B → 70B → 22B(MoE) → 37B(MoE)
+    Intra-family Phi: phi4 (14B) unico rappresentante Microsoft (slot 3.8B non disponibile)
+    Intra-family Qwen: qwen3_8b (8B) vs qwen3 (22B active) — scala + architettura
     Dense vs MoE:     phi4 (14B) + llama33_70b (70B) dense vs qwen3/deepseek (MoE)
 
-  All models are served through OpenRouter; requires OPENROUTER_API_KEY in .env.
-  Qwen3 models run with non-thinking mode forced via extra_params.
+  Tutti i modelli via OpenRouter. Requires OPENROUTER_API_KEY in .env.
+  Qwen3 models: non-thinking mode forzato via extra_params.
 
 temperature=0 across all models.
 
@@ -55,7 +55,9 @@ PROMPTING STRATEGIES
 --------------------
   zeroshot : direct instruction, no examples
   cot      : explicit 4-step chain-of-thought before answer
-  fewshot  : 3 out-of-sample demonstrations (pre-2010 deals, outside evaluation window)
+  fewshot  : 3 provenance-checked demonstrations per condition; all example
+             transactions are post-profile and announced/completed by 2009-12-31;
+             this cutoff applies only to demonstrations, never to evaluation cases
 
 OUTPUT
 ------
@@ -64,6 +66,8 @@ OUTPUT
   results/retrieval_aug_metadata/{model}/{strategy}/responses_raw.jsonl (Condition C)
   logs/pipeline_{timestamp}.log
 
+
+Da fare
 ------------
   pip install openai tenacity tqdm python-dotenv
   OPENROUTER_API_KEY in .env file at project root  (for DeepSeek)
@@ -72,8 +76,11 @@ OUTPUT
 REPRODUCIBILITY
 ---------------
   Model versions are logged in the `model_used` field of every output record.
-  Candidate list ordering is deterministically seeded by deal_id (see script 14b).
-  Few-shot examples are restricted to deals announced before 2005 to prevent temporal contamination with the evaluation window (2015-2022).
+  Candidate list ordering is deterministically seeded by deal_id (see script 14).
+  Few-shot examples pass scripts/validate_fewshot_protocol.py before paid calls.
+  The gate enforces the 2009-12-31 cutoff, three examples in A/B/C, a separate
+  metadata-only C prompt, an explicit demonstration-only cutoff statement, and
+  zero entity overlap with the benchmark.
 """
 
 import os
@@ -106,6 +113,7 @@ sys.path.insert(0, str(sys_path))
 from lib import profile as _profile
 from lib import provenance as _prov
 from lib import corpus_io as _corpus_io
+from lib import fewshot_protocol as _fewshot_protocol
 
 
 # ---------------------------------------------------------------------------
@@ -150,11 +158,11 @@ log = logging.getLogger(__name__)
 
 MODELS: dict[str, dict] = {
     # ------------------------------------------------------------------
-    # Final roster - scaling curve from 1B to 37B active params (all OpenRouter)
-    # Ordered by increasing active parameters
+    # Roster finale v3 — curva di scala 1B → 37B (tutti OpenRouter)
+    # Ordine: params attivi crescenti
     # ------------------------------------------------------------------
 
-    # Llama 3.2 1B - 1B dense - extreme lower bound (Meta family)
+    # Llama 3.2 1B — 1B dense — lower bound estremo (Meta family)
     "llama32_1b": {
         "model_id":     "meta-llama/llama-3.2-1b-instruct",
         "provider":     "openrouter",
@@ -162,8 +170,10 @@ MODELS: dict[str, dict] = {
         "extra_params": {},
     },
 
-    # Qwen3-8B - 8B dense - small Qwen (Qwen family)
-    # Pinned to the 04-28 served version for reproducibility
+    # Qwen3-8B — 8B dense — small Qwen (Qwen family).
+    # The dated endpoint is requested, but OpenRouter currently reports the
+    # served alias `qwen/qwen3-8b`; both identifiers are stored per call and the
+    # mismatch is disclosed rather than represented as a verified pin.
     "qwen3_8b": {
         "model_id":     "qwen/qwen3-8b-04-28",
         "provider":     "openrouter",
@@ -261,11 +271,11 @@ strip_descriptions = _profile.strip_descriptions
 # Expected filenames (configurable via PROMPT_FILES below):
 #   prompts/A_zeroshot.txt   prompts/B_zeroshot.txt
 #   prompts/A_cot.txt        prompts/B_cot.txt
-#   prompts/A_fewshot.txt    prompts/B_fewshot.txt
+#   prompts/A_fewshot.txt    prompts/B_fewshot.txt    prompts/C_fewshot.txt
 #
-# Condition C reuses the B templates — strip_descriptions() removes the
-# Description field from the candidate list before injection, so no
-# separate C template is needed.
+# Condition C reuses the B zero-shot and CoT templates because descriptions
+# are removed from the injected evaluation list. Few-shot uses a dedicated C
+# template so descriptions are absent from BOTH demonstrations and evaluation.
 
 PROMPT_FILES: dict[tuple[str, str], str] = {
     ("A", "zeroshot"): "A_zeroshot.txt",
@@ -274,10 +284,10 @@ PROMPT_FILES: dict[tuple[str, str], str] = {
     ("B", "zeroshot"): "B_zeroshot.txt",
     ("B", "cot"):      "B_cot.txt",
     ("B", "fewshot"):  "B_fewshot.txt",
-    # Condition C reuses B templates (candidate list is stripped at runtime)
+    # Zero-shot/CoT share instructions; candidate descriptions are stripped.
     ("C", "zeroshot"): "B_zeroshot.txt",
     ("C", "cot"):      "B_cot.txt",
-    ("C", "fewshot"):  "B_fewshot.txt",
+    ("C", "fewshot"):  "C_fewshot.txt",
 }
 
 SYSTEM_PROMPTS: dict[str, str] = {
@@ -353,9 +363,10 @@ def build_prompt(deal: dict, condition: str, strategy: str) -> tuple[str, str]:
       - {acquirer_profile}  : anonymized acquirer profile (Item 1 + MD&A + financials)
       - {candidate_list}    : 50 anonymous candidates (B: full, C: metadata only)
 
-    Condition C reuses the B template — candidate descriptions are stripped
-    by strip_descriptions() before injection, so no separate template is needed.
-    The system prompt for C explicitly notes the metadata-only constraint.
+    Condition C strips descriptions from the injected candidate list. Its
+    few-shot strategy additionally uses C_fewshot.txt, whose fixed
+    demonstrations are metadata-only. The system prompt for C explicitly notes
+    the same constraint.
     """
     profile    = build_acquirer_profile(deal)
     system     = SYSTEM_PROMPTS[condition]
@@ -598,6 +609,14 @@ def run_experiment(
     "length" truncations for CoT strategies would indicate MAX_TOKENS is
     insufficient and requires adjustment before reporting results.
     """
+    if strategy == "fewshot":
+        report = _fewshot_protocol.validate_protocol(BASE_DIR)
+        log.info(
+            "Few-shot validation gate PASSED | protocol=%s cutoff=%s examples=%s",
+            report["protocol_version"], report["cutoff_date"],
+            report["examples_per_condition"],
+        )
+
     model_cfg   = MODELS[model_key]
     output_path = get_output_path(condition, model_cfg, strategy)
 
