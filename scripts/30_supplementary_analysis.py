@@ -2,8 +2,6 @@
 30_supplementary_analysis.py
 =============================
 
-Supplementary analyses that support, but are not required by, the main results.
-
 ANALYSES
 --------
 (1) Bootstrap CI on embedding results
@@ -97,7 +95,7 @@ TEX_CORR      = TEX_DIR / "table_correlation_v2.tex"
 N_BOOTSTRAP  = 1000
 BOOTSTRAP_CI = 0.95
 RANDOM_SEED  = 42
-RANDOM_MRR   = sum(1.0 / r for r in range(1, 51)) / 50  # ≈ 0.090
+RANDOM_MRR   = _metrics.chance_mrr_at_k(10, 50)  # H_10 / 50 ≈ 0.0586
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────
@@ -708,7 +706,7 @@ def main():
     print("=" * 60)
     for path in [OUT_EMB_AGG, OUT_INDUSTRY, OUT_YEAR, OUT_CORR,
                  TEX_INDUSTRY, TEX_YEAR, TEX_CORR]:
-        status = "[OK]" if path.exists() else "[--] (not generated)"
+        status = "✓" if path.exists() else "✗ (not generated)"
         print(f"  {status}  {path.name}")
 
 
